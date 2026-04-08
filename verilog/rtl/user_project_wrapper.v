@@ -82,7 +82,7 @@ module user_project_wrapper #(
 /* User project is instantiated  here   */
 /*--------------------------------------*/
 
-user_proj_example mprj (
+i2c_master_top i2c_master_top_i (
 `ifdef USE_POWER_PINS
 	.vccd1(vccd1),	// User area 1 1.8V power
 	.vssd1(vssd1),	// User area 1 digital ground
@@ -93,29 +93,23 @@ user_proj_example mprj (
 
     // MGMT SoC Wishbone Slave
 
-    .wbs_cyc_i(wbs_cyc_i),
-    .wbs_stb_i(wbs_stb_i),
-    .wbs_we_i(wbs_we_i),
-    .wbs_sel_i(wbs_sel_i),
-    .wbs_adr_i(wbs_adr_i),
-    .wbs_dat_i(wbs_dat_i),
-    .wbs_ack_o(wbs_ack_o),
-    .wbs_dat_o(wbs_dat_o),
+    .wb_cyc_i(wbs_cyc_i),
+    .wb_stb_i(wbs_stb_i),
+    .wb_we_i(wbs_we_i),
+    .wb_inta_o(io_out[37]),
+    .wb_adr_i(wbs_adr_i[2:0]),
+    .wb_dat_i(wbs_dat_i[7:0]),
+    .wb_ack_o(wbs_ack_o),
+    .wb_dat_o(wbs_dat_o[7:0]),
 
-    // Logic Analyzer
-
-    .la_data_in(la_data_in),
-    .la_data_out(la_data_out),
-    .la_oenb (la_oenb),
-
-    // IO Pads
-
-    .io_in ({io_in[37:30],io_in[7:0]}),
-    .io_out({io_out[37:30],io_out[7:0]}),
-    .io_oeb({io_oeb[37:30],io_oeb[7:0]}),
-
-    // IRQ
-    .irq(user_irq)
+    .arst_i(io_in[37]),
+    .scl_pad_i(io_in[36]),
+    .sda_pad_i(io_in[35]),
+    .scl_pad_o(io_out[34]),
+    .scl_padoen_o(io_out[33]),
+    .sda_pad_o(io_out[32]),
+    .sda_padoen_o(io_out[31]),
+    .io_oeb(io_oeb[37:31])
 );
 
 endmodule	// user_project_wrapper
